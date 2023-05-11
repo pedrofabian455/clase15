@@ -4,6 +4,9 @@
  */
 package com.acme;
 
+import com.acme.dao.ContactoDAO;
+import com.acme.dao.ContactoDAOImpl;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,47 +20,64 @@ import java.io.PrintWriter;
  * @author JuaN
  */
 @WebServlet(urlPatterns = "/ContactoServlet")
-public class ContactoServlet extends HttpServlet{
-    
+public class ContactoServlet extends HttpServlet {
+
+    private ContactoDAO contactoDao;
+
+    public ContactoServlet() {
+        super();
+        contactoDao = new ContactoDAOImpl();
+    }
+
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String nombre = req.getParameter("nombre");
         String emailId = req.getParameter("emailId");
         String telefono = req.getParameter("telefono");
         String descripcion = req.getParameter("descripcion");
-        
-        resp.setContentType("text/html");
-        PrintWriter printWriter = resp.getWriter();
-        printWriter.print("<html>");
-        printWriter.print("<body>");
-        printWriter.print("<h1> Datos de Registro de Contacto </h1>");
-        printWriter.print("<p>Nombre: " +nombre +"</p>");
-        printWriter.print("<p>Email: " +emailId +"</p>");
-        printWriter.print("<p>Telefono: " +telefono +"</p>");
-        printWriter.print("<p>Descripcion: " +descripcion +"</p>");
-        printWriter.print("</body>");
-        printWriter.print("</html>");
-        printWriter.close();
     }
-    
+
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp ) throws ServletException, IOException{
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String nombre = req.getParameter("nombre");
         String apellido = req.getParameter("apellido");
         String email = req.getParameter("email");
         String descripcion = req.getParameter("descripcion");
-        
-        resp.setContentType("text/html");
-        PrintWriter pw = resp.getWriter();
-        pw.print("<html>");
-        pw.print("<body>");
-        pw.print("<h1>Datos de Contacto </h1>");
-        pw.print("<p> Nombre: " + nombre +"</p>");
-        pw.print("<p> Apellido: " + apellido +"</p>");
-        pw.print("<p> Email: " + email +"</p>");
-        pw.print("<p> Descripcion: " + descripcion +"</p>");
-        pw.print("</body>");
-        pw.print("</html>");
-        pw.close();
     }
+
+    protected void procesarSolicitud(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        switch (request.getParameter("action")) {
+            case "list":
+                // this.list(request, response);
+                break;
+            case "create":
+                //this.create(request, response);
+                break;
+            case "read":
+                // this.read(request, response);
+                break;
+            case "update":
+                //this.update(request, response);
+                break;
+            case "delete":
+                // this.delete(request, response);
+                break;
+            case "showRegister":
+                //this.showRegister(request, response);
+                break;
+            case "index":
+                this.index(request, response);
+                break;
+            default:
+               this.index(request, response);
+                break;
+        }
+        
+    }
+        private void index(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+            RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+            dispatcher.forward(request, response);
+        }
+
 }
