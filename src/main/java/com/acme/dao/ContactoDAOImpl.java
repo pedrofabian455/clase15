@@ -54,7 +54,7 @@ public class ContactoDAOImpl implements ContactoDAO {
             }
 
         } catch (Exception e) {
-            System.out.println("Error en la consulta");
+            System.out.println("Error en la consulta " + e);
         }
         return listado;
     }
@@ -87,7 +87,7 @@ public class ContactoDAOImpl implements ContactoDAO {
                 System.out.println("No exite dato de ID");
             }
         }catch(Exception e){
-            System.out.println("Error al insertar");
+            System.out.println("Error al insertar " + e);
         }
         return objContacto;
     }
