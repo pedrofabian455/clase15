@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  *
@@ -47,7 +48,7 @@ public class ContactoServlet extends HttpServlet {
         // Se redirecciona de acuerdo a la petición
         switch (request.getParameter("action")) {
             case "list":
-                // this.list(request, response);
+                 this.list(request, response);
                 break;
             case "create":
                 this.create(request, response);
@@ -108,5 +109,15 @@ public class ContactoServlet extends HttpServlet {
 
         // Se ejecuta el método "index" para redireccionar al JSP "index.jsp"
         this.index(request, response);
+    }
+    
+    private void list(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException{
+        List<Contacto> listaContactos = this.contactoDao.findAll();
+        
+        request.setAttribute("lista", listaContactos);
+        
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/list.jsp");
+        dispatcher.forward(request, response);
     }
 }
