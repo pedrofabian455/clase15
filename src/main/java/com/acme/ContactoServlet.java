@@ -45,22 +45,22 @@ public class ContactoServlet extends HttpServlet {
 
     protected void procesarSolicitud(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Se redirecciona de acuerdo a la petición
+        // Se redirecciona de acuerdo a la petición.
         switch (request.getParameter("action")) {
             case "list":
-                 this.list(request, response);
+                this.list(request, response);
                 break;
             case "create":
                 this.create(request, response);
                 break;
             case "read":
-                // this.read(request, response);
+                this.read(request, response);
                 break;
             case "update":
-                //this.update(request, response);
+                this.update(request, response);
                 break;
             case "delete":
-                // this.delete(request, response);
+                this.delete(request, response);
                 break;
             case "showRegister":
                 this.showRegister(request, response);
@@ -110,14 +110,90 @@ public class ContactoServlet extends HttpServlet {
         // Se ejecuta el método "index" para redireccionar al JSP "index.jsp"
         this.index(request, response);
     }
-    
-    private void list(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException{
+
+    private void list(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Busca en la BD todos los elementos y lo almacena en una lista.
         List<Contacto> listaContactos = this.contactoDao.findAll();
-        
+
+        // Devuelve la respuesta.
         request.setAttribute("lista", listaContactos);
-        
+
+        // Redirecciona al JSP "list.jsp" para mostrar la lista.
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/list.jsp");
         dispatcher.forward(request, response);
+    }
+
+    private void read(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Recoge el ID del elemento a buscar.
+        Integer id = Integer.parseInt(request.getParameter("id"));
+
+        // Se crea un objeto "datosObjContacto" de clase Contacto.
+        Contacto datosObjContacto = new Contacto();
+
+        // Busca en la BD el elemento con ese ID.
+        datosObjContacto = this.contactoDao.findById(id);
+
+        // Devuelve la respuesta.
+        request.setAttribute("contacto", datosObjContacto);
+
+        // Redirecciona al JSP "read.jsp" para mostrar los datos.
+        RequestDispatcher distpacher = request.getRequestDispatcher("/view/read.jsp");
+        distpacher.forward(request, response);
+    }
+
+    private void update(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Recoge el ID del elemento a buscar.
+        Integer id = Integer.parseInt(request.getParameter("id"));
+
+        // Se crea un objeto "objContacto" de clase Contacto.
+        Contacto objContacto = new Contacto();
+
+        // Busca en la BD el elemento con ese ID.
+        objContacto = this.contactoDao.findById(id);
+
+        // Recogen los datos desde la peticion.
+        String name = request.getParameter("nombre");
+        String apellido = request.getParameter("apellido");
+        String email = request.getParameter("email");
+        String descrip = request.getParameter("descripcion");
+
+        // Modifica el objeto con los datos de la petición.
+        objContacto.setNombre(name);
+        objContacto.setApellido(apellido);
+        objContacto.setEmail(email);
+        objContacto.setDescripcion(descrip);
+
+        // Actualiza los datos en la BD.
+        contactoDao.updateById(id, objContacto);
+
+        // Redirecciona al JSP "list.jsp".
+        this.list(request, response);
+
+    }
+
+    private void delete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Recoge el ID del elemento a buscar.
+        Integer id = Integer.parseInt(request.getParameter("id"));
+
+        // Se crea un objeto "objContacto" de clase Contacto.
+        Contacto objContacto = new Contacto();
+
+        // Busca en la BD el elemento con ese ID.
+        objContacto = this.contactoDao.findById(id);
+
+        // Devuelve la respuesta.
+        if (!objContacto.getId().equals(0)) {
+            // Elimina el objeto de la BD.
+            this.contactoDao.deleteById(id);
+        } else {
+            System.out.println("No existe el elemento con ese id");
+        }
+
+        // Redirecciona al JSP "list.jsp"
+        this.list(request, response);
     }
 }
