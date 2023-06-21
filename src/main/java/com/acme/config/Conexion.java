@@ -20,8 +20,8 @@ public class Conexion {
     
     public Conexion(){
         this.jdbcURL = "jdbc:mysql://localhost:3306/contacto?useSSL=false";
-        this.jdbcUsername = "admin"; //root
-        this.jdbcPassword = "@0123456789";
+        this.jdbcUsername = "root"; //root
+        this.jdbcPassword = "uninorte123";
     }
     
     public void conectar() throws SQLException{
